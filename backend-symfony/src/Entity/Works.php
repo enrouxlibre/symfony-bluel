@@ -16,7 +16,7 @@ class Works
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255,name:"imageUrl")]
     private ?string $imageUrl = null;
 
     #[ORM\ManyToOne(inversedBy: 'works')]

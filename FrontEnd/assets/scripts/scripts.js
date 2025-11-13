@@ -1,6 +1,6 @@
 /* api stuff */
 
-const url = "http://localhost:5678/api";
+const url = "http://localhost:8080";
 
 async function getData(endpoint) {
   try {

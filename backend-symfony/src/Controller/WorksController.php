@@ -10,6 +10,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Works;
+use App\Entity\Users;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 final class WorksController extends AbstractController
@@ -25,15 +26,27 @@ final class WorksController extends AbstractController
         return new JsonResponse($jsonWorksList, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/works', name: 'app_works', methods:['POST'])]
-    public function createWorks(WorksRepository $worksRepository): JsonResponse
+    #[Route('/works', name: 'createWorks', methods:['POST'])]
+    public function createWorks(Request $request, SerializerInterface $serializer, EntityManagerInterface $em): JsonResponse
     {
-        $worksList = $worksRepository->findAll();
-         
-        return new JsonResponse(null, Response::HTTP_OK, [], true);
+        $token = $this->tokenStorage->getToken();
+        
+        if($token){
+            $works = $serializer->deserialize($request->getContent(), Works::class, 'json');
+            $works->author = $serializer->deserialize($token->user, Users::class, 'json');
+            $em->persist($works);
+            $em->flush();
+
+            $jsonWorks = $serializer->serialize($works, 'json');
+    
+            return new JsonResponse($jsonWorks, Response::HTTP_CREATED);
+        }
+        else{
+            return new JsonResponse(null, Response::HTTP_UNAUTHORIZED);
+        }
     }
-    #[Route('/api/books/{id}', name: 'deleteBook', methods: ['DELETE'])]
-    public function deleteBook(Works $works, EntityManagerInterface $em): JsonResponse 
+    #[Route('/works/{id}', name: 'deleteWorks', methods: ['DELETE'])]
+    public function deleteWorks(Works $works, EntityManagerInterface $em): JsonResponse 
     {
         $token = $this->tokenStorage->getToken();
         

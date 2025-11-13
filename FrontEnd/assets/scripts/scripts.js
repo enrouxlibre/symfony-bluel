@@ -195,7 +195,7 @@ function addWorkToModal(work, modalGallery) {
 
 function addWorkElement(work, gallery) {
   let figure = document.createElement("figure");
-  figure.dataset.categoryId = work.categoryId;
+  figure.dataset.categoryId = work.category.id;
   let img = document.createElement("img");
   img.src = work.imageUrl;
   img.alt = work.title;

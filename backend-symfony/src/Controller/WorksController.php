@@ -21,7 +21,7 @@ final class WorksController extends AbstractController
 {
     private $tokenStorage;
 
-    public function __construct(TokenStorageInterface $tokenStorage, LoggerInterface $logger)
+    public function __construct(TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
     }

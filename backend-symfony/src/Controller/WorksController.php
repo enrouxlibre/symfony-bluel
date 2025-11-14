@@ -43,13 +43,9 @@ final class WorksController extends AbstractController
     {
         $token = $this->tokenStorage->getToken();
 
-        $this->logger->info("Je suis ici !");
-
         if (!$token || !$token->getUser()) {
             return new JsonResponse(null, Response::HTTP_UNAUTHORIZED);
         }
-
-        $this->logger->info("Je suis là !");
 
         // support JSON body and multipart/form-data (file upload)
         try {
@@ -57,8 +53,6 @@ final class WorksController extends AbstractController
         } catch (\Throwable $e) {
             $data = $request->request->all();
         }
-
-        $this->logger->info("Bravo, tu es là !");
 
         $title = $data['title'] ?? null;
         $categoryId = $data['category'] ?? null;
@@ -71,8 +65,6 @@ final class WorksController extends AbstractController
         if (!$category) {
             return new JsonResponse(['error' => 'Category not found'], Response::HTTP_BAD_REQUEST);
         }
-
-        $this->logger->info("Si on arrive jusque là, j'abandonne !");
 
         // handle uploaded image file (field name: "image")
         $imageUrl = null;
@@ -90,18 +82,13 @@ final class WorksController extends AbstractController
             } catch (\Throwable $e) {
                 return new JsonResponse(['error' => 'Failed to move uploaded file'], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
-        } else {
-            // fallback: allow passing image path/url in JSON under "image"
-            $imageUrl = $data['image'] ?? null;
         }
 
         $works = new Works();
         $works->setTitle($title);
         $works->setCategory($category);
-        if ($imageUrl !== null) {
+        if ($imageUrl !== null && $imageUrl !=='') {
             $works->setImageUrl($imageUrl);
-        } else {
-            $works->setImageUrl(''); // or set to null if entity allows
         }
         $works->setauthor($token->getUser());
 

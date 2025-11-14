@@ -12,7 +12,6 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Works;
-use App\Entity\Users;
 use App\Entity\Categories;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -21,12 +20,10 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 final class WorksController extends AbstractController
 {
     private $tokenStorage;
-    private $logger;
 
     public function __construct(TokenStorageInterface $tokenStorage, LoggerInterface $logger)
     {
         $this->tokenStorage = $tokenStorage;
-        $this->logger = $logger;
     }
 
     #[Route('/works', name: 'app_works', methods:['GET'])]
